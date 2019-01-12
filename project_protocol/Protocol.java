@@ -21,7 +21,8 @@ public interface Protocol {
      * Every message consists of multiple attributes. Every attribute is separated by a “,”.
      * The first attribute of every message is the identifier. The identifier signifies what kind of message it is.
      * A player always has 90 seconds to respond to a move-request from the server. If they surpass these 90 seconds
-     * the server will skip their turn. If the player tries to make invalid moves, such as placing tiles in locations that do not exist, 
+     * the server will skip their turn. If the player tries to make invalid moves, such as placing tiles in locations that 
+     * do not exist, 
      * their turn is skipped.
      * Messages that are in a wrong format or should not have been sent are answered
      * with an error message as defined below.
