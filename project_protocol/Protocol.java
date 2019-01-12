@@ -21,7 +21,9 @@ public interface Protocol {
      * Every message consists of multiple attributes. Every attribute is separated by a “,”.
      * The first attribute of every message is the identifier. The identifier signifies what kind of message it is.
      * A player always has 90 seconds to respond to a move-request from the server. If they surpass these 90 seconds
-     * the server will skip their turn. Messages that are in a wrong format or should not have been sent are answered
+     * the server will skip their turn. If the player tries to make invalid moves, such as placing tiles in locations that do not exist, 
+     * their turn is skipped.
+     * Messages that are in a wrong format or should not have been sent are answered
      * with an error message as defined below.
      *
      * The client should connect on port 666.
@@ -231,9 +233,18 @@ public interface Protocol {
      * Example:
      * A player has send an invalid message
      * "ERROR,You have send and invalid message."
+     * 
+     * A player has sent a tile they do not own
+     * "ERROR, You do not own this tile."
      *
      */
     String ERROR = "ERROR";
+    
+    /**
+     * Makes sure that the tile send by the player is actually owned by the player.
+     */
+     boolean checkValidTile(Tile tile);
+    
 
 
     /* ---------------------------EXTRA Functionality ---------------------------	 */
