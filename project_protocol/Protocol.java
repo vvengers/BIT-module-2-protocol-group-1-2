@@ -33,8 +33,33 @@ public interface Protocol {
      * WATCH OUT: SEQUENCE OF PARAMETERS OF FUNCTIONS IS EXPLICIT. FOLLOW SEQUENCE AS INDICATED IN JAVADOC.
      * WATCH OUT: ALL PARAMETERS ARE OF THE TYPE "STRING" AND SEPARATED BY A ","
      * WATCH OUT: PARAMETERS MAY NOT INCLUDE " " AND "\"
-     * WATCH OUT:Coordinates are used in the same as described in the kick of session of the project.
-     *
+     * WATCH OUT: Coordinates are used in the same as described in the kick of session of the project.
+     * WATCH OUT: When a tile gets flipped(changes the directions at which it points), 
+     * 			  the left and right colour switch.
+     * 			  Example:
+     * 				   /\
+     * 				  / 6\
+     * 				 /R  B\
+     * 				/  G   \
+     * 				--------
+     * 					|
+     * 					| when flipped
+     * 					V
+     * 				--------
+     * 				\   6  /
+     * 				 \B  R/
+     * 				  \G /
+     *  			   \/
+     * 				
+     * WATCH OUT: when a tile can only rotate clockwise. 
+     * 		This is what it looks like:
+     * 	  			   /\   			/\				/\
+     * 				  / 6\			   / 6\			   / 6\
+     * 				 /R  B\ 		  /G  R\ 		  /B  G\
+     * 				/  G   \		 /  B   \		 /  R   \
+     * 				--------		 --------  	 	 --------
+     *				Flipped			 Flipped		  Flipped
+     *				0 times			 1 time			  2times
      */
 
 
@@ -64,6 +89,10 @@ public interface Protocol {
      *      disconnects from all players.
      *   b.	Case game not over: go to step 4.
      */
+	
+	int TIMEOUT = 90; //seconds
+    String DELIMITER = ",";
+    int PORT = 6666;
 
     /**
      * Colours will be represented in the following way
@@ -77,8 +106,9 @@ public interface Protocol {
 
 
     /**
-     * connect-request
-     * IS used to connect to the server.
+     * CONNECTREQUEST
+     * Client --> Server
+     * Is used to connect to the server.
      *
      * List of arguments
      * - Name of client
@@ -92,8 +122,8 @@ public interface Protocol {
 
 
     /**
-     * Tile-representation
-     * Is used to represent a tile
+     *  Tile Representation
+     * Is used to represent a tile. 
      *
      * List of arguments:
      * -Colour of left side
@@ -113,7 +143,7 @@ public interface Protocol {
     String TILE = "TILE";
 
     /**
-     * player-tiles
+     * PLAYERTILES
      * Is used to represent all tiles in a players inventory
      *
      * List of arguemnts:
@@ -131,7 +161,7 @@ public interface Protocol {
     String PLAYERTILES = "PLAYERTILES";
 
     /**
-     * game-started
+     * GAMESTARTED
      * Is used to communicate that the game has started, which players are in the game and what their tiles are.
      *
      * List of arguments
@@ -150,7 +180,7 @@ public interface Protocol {
     String GAMESTARTED = "GAMESTARTED";
 
     /**
-     * move
+     * MOVE
      * Is used to denote the move of a particular tile to a location
      *
      * List of arguments:
@@ -191,19 +221,33 @@ public interface Protocol {
     String TILEREPLACE = "TILEREPLACE";
 
     /**
-     * skip
-     * Is used for a skip request or inform a player that their turn is being skipped.
+     * SKIP
+     * Client --> Server
+     * Is used for to tell the server to skip a move
      *
      * Example:
      * "SKIP"
      *
      */
     String SKIP = "SKIP";
+    
+    /**
+     * skip
+     * Server --> Client
+     * Is used to inform that a player has skipped a move.
+     *
+     * Argument:
+     * - name of the player that skipped the move
+     *
+     * Example:
+     * "MOVESKIPPED Barry"
+     */
+    String MOVESKIPPED = "MOVESKIPPED";
 
     /**
-     * game-over
-     * Is used to inform the players that the game is over and what the points are. Who the winner is, is implied
-     * by the points.
+     * GAMEOVER
+     * Is used to inform the players that the game is over and what the points are. 
+     * Who the winner is, is implied by the points.
      *
      * List of arguments:
      * -name of player 1
@@ -224,11 +268,18 @@ public interface Protocol {
     String GAMEOVER = "GAMEOVER";
 
     /**
-     * error
+     * ERROR
      * Is used to inform a player that something has gone wrong.
      *
      * List of arguments:
+     * -error code
      * -error message
+     * 
+     * error codes:
+     * - 0: time-out.
+     * - 1: wrong argument.
+     * - 2: unexpected argument.
+     * - 3: other.
      *
      * Example:
      * A player has send an invalid message
@@ -331,7 +382,7 @@ public interface Protocol {
 
     /**
      * challenge response
-     * This is used by the client being challenged to refuse. They have 60 seconds to refuse the challenge.
+     * This is used by the client being challenged to accept. They have 60 seconds to accept the challenge.
      *
      * Example:
      * "ACCEPTCHALLENGE"
@@ -341,8 +392,23 @@ public interface Protocol {
 
     /**
      * request leaderboard
+     * Client -> Server
      * Is used by the client to request all leaderboards.
-     * "REQUESTLEADERBOARD"
+     * 
+     * List of arguments:
+     * - parameter
+     *
+     * List of parameters: 
+     * - top n scores				syntax:"top[n]"
+     * - scores above n				syntax:"above[n]"
+     * - scroes below n				syntax:"below[n]"
+     * - average score of the day	syntax:"avg"
+     * 
+     * Example:
+     * Barry wants the top 13 scores: "REQUESTLEADERBOARD,top13"
+     * Barry wants all scores above 55: "REQUESTLEADERBOARD,above55"
+     * Barry wants all scores below 55: "REQUESTLEADERBOARD,below55"
+     * Barry wants the average score of the day: "REQUESTLEADERBOARD,avg"
      *
      */
     String REQUESTLEADERBOARD = "REQUESTLEADERBOARD";
