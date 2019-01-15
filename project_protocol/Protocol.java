@@ -26,7 +26,7 @@ public interface Protocol {
      * Messages that are in a wrong format or should not have been sent are answered
      * with an error message as defined below.
      *
-     * The client should connect on port 666.
+     * The client should connect on port 6666.
      *
      *
      * WATCH OUT: When a client disconnects from the server, this player will be replace by a dumb AI player.
