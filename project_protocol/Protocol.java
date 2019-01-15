@@ -29,7 +29,7 @@ public interface Protocol {
      * The client should connect on port 666.
      *
      *
-     *
+     * WATCH OUT: When a client disconnects from the server, this player will be replace by a dumb AI player.
      * WATCH OUT: SEQUENCE OF PARAMETERS OF FUNCTIONS IS EXPLICIT. FOLLOW SEQUENCE AS INDICATED IN JAVADOC.
      * WATCH OUT: ALL PARAMETERS ARE OF THE TYPE "STRING" AND SEPARATED BY A ","
      * WATCH OUT: PARAMETERS MAY NOT INCLUDE " " AND "\"
