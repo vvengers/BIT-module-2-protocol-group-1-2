@@ -46,9 +46,9 @@ public interface Protocol {
      * 					| when flipped
      * 					V
      * 				--------
-     * 				\   6  /
+     * 				\   G  /
      * 				 \B  R/
-     * 				  \G /
+     * 				  \6 /
      *  			   \/
      * 				
      * WATCH OUT: when a tile can only rotate clockwise. 
@@ -135,9 +135,9 @@ public interface Protocol {
      * "TILE,R,B,G,6"                            /  G   \
      *                                           --------
      *                                           --------
-     * Example: We want to represent the triangle\   5  /
+     * Example: We want to represent the triangle\   W  /
      *                                            \Y  P/
-     *  "TILE,Y,W,P,5"                             \W /
+     *  "TILE,Y,W,P,5"                             \5 /
      *                                              \/
      */
     String TILE = "TILE";
