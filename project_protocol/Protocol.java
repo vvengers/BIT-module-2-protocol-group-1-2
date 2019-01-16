@@ -4,13 +4,16 @@ package project_protocol;
  * Project Module 2 2018-2019: 'Spectrangle'
  * Interface Protocol
  * @author  Vincent van Engers
- * @version 1.0.6
+ * @version 1.0.7
  *
  *
  */
 
 /**
  * Changelog
+ * 
+ * version 1.0.7
+ * Removed the MOVESKIPPED message and added the TURNMADE message.
  * 
  * version 1.0.6
  * The server needs to make sure there are no two clients with the same name.
@@ -100,17 +103,18 @@ public interface Protocol {
      * 3.	The server uses a random number generator to choose who may start.
      * 4.	The server sends a move-request to the player whose turn it is.
      * 5.	The player can either sent a move message, a tile-replace or a skip-move.
-     * 6.	 Server response:
+     * 6.	Server response:
+     * 		No matter if a, b or c is executed, a TURNMADE is send to every client afterwards. This
+     * 		is also the confirm for the player who's turn it was.
+     * 
      *  a.	Case move message: the server checks if the move is valid. If the move is not valid than the server
      *      will skip the players move and sent a skip-move. If the move is valid than the server will send a
-     *      tile-representation (of a tile from the bag) to the player and will send a
-     *      player-tiles message (of the player who’s turn it was) to all players.
+     *      tile-representation (of a tile from the bag) to the player.
      *  b.	Case tile-replace: the server checks if the player really cannot do any more moves.
      *      If the player can actually make a move with the tiles the player has, the server will skip
-     *      the players move and sent a skip-move.
+     *      the players move.
      *      If the player truly cannot make any more moves, the server will remove one tile from
-     *      the bag and send a tile-replace to the player and send a player-tiles message of the player who’s turn
-     *      it was to all players.
+     *      the bag and put the given tile in.
      *   c.	Case skip-move: the server will skip the players move.
      * 7.
      *   a.	Case game over: the server will send a game-over message to all players, close the game and
@@ -262,18 +266,30 @@ public interface Protocol {
     String SKIP = "SKIP";
     
     /**
-     * skip
+     * Turn done
+     * Is used to inform clients that a player has played a turn.
      * Server --> Client
-     * Is used to inform that a player has skipped a move.
-     *
-     * Argument:
-     * - name of the player that skipped the move
-     *
-     * Example:
-     * "MOVESKIPPED Barry"
+     * 
+     * List of arguemnts:
+     * - What kind of turn. An actual move [M], tile replacement[R], move was skipped[S]
+     * - name
+     * - move (only used with [m])
+     * - playerTiles (only used with[R])
+     * 
+     * Examples:
+     * Barry has made put tile (G, R, B, 6) twice rotated at (0, 2):
+     * "TURNMADE,Barry,M,MOVE,TILE,G,R,B,6,2,0,3"
+     * 
+     * Barry wanted to replace tile (G, R, B, 6) and received tile (Y, Y, Y, 1)
+     * "TURNMADE,Barry,R,PLAYERTILES|TILE,Y,Y,Y,1|TILE,P,W,G,5|TILE,R,B,Y,6|TILE,R,B,G,1|Barry"
+     * 
+     * Barry's move was skipped (either because he choose to do so or because he did something that
+     * made the server skip his move)
+     * "TURNMADE,Barry,S"
+     * 
      */
-    String MOVESKIPPED = "MOVESKIPPED";
-
+    String TURNMADE = "TURNMADE";
+    
     /**
      * GAMEOVER
      * Is used to inform the players that the game is over and what the points are. 
