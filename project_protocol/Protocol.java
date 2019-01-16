@@ -12,6 +12,10 @@ package project_protocol;
 /**
  * Changelog
  * 
+ * version 1.0.4
+ * Removed error codes
+ * Added explanation for what to do with errors.
+ * 
  * version 1.0.3
  * Added definition for coordinate
  * 
@@ -289,14 +293,7 @@ public interface Protocol {
      * Is used to inform a player that something has gone wrong.
      *
      * List of arguments:
-     * -error code
      * -error message
-     * 
-     * error codes:
-     * - 0: time-out.
-     * - 1: wrong argument.
-     * - 2: unexpected argument.
-     * - 3: other.
      *
      * Example:
      * A player has send an invalid message
