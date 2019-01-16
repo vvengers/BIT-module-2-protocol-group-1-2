@@ -4,13 +4,16 @@ package project_protocol;
  * Project Module 2 2018-2019: 'Spectrangle'
  * Interface Protocol
  * @author  Vincent van Engers
- * @version 1.0.4
+ * @version 1.0.5
  *
  *
  */
 
 /**
  * Changelog
+ * 
+ * version 1.0.5
+ * Changed gameover message to contain "|" as splitters
  * 
  * version 1.0.4
  * Removed error codes
@@ -174,9 +177,11 @@ public interface Protocol {
      * -fourth tile
      * -name of player
      *
+     * WATCH OUT: the individual tiles are split by "|"
+     *
      * Example:
      * Barry have the tiles (Red, Blue, Green, 6) (Purple, White, Green, 5) (Red, Blue, Yellow, 6) (Red, Blue, Green, 1)
-     * "PLAYERTILES,TILE,R,B,G,6,TILE,P,W,G,5,TILE,R,B,Y,6,TILE,R,B,G,1,Barry"
+     * "PLAYERTILES|TILE,R,B,G,6|TILE,P,W,G,5|TILE,R,B,Y,6|TILE,R,B,G,1|Barry"
      *
      */
     String PLAYERTILES = "PLAYERTILES";
