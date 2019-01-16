@@ -4,9 +4,16 @@ package project_protocol;
  * Project Module 2 2018-2019: 'Spectrangle'
  * Interface Protocol
  * @author  Vincent van Engers
- * @version 1.0.0
+ * @version 1.0.1
  *
  *
+ */
+
+/**
+ * Changelog
+ * version 1.0.1
+ * The game will now start 60 seconds after the second player has joined.
+ * 
  */
 
 
@@ -25,6 +32,8 @@ public interface Protocol {
      * do not exist, their turn is skipped.
      * Messages that are in a wrong format or should not have been sent are answered
      * with an error message as defined below.
+     * 
+     * The game will start 60 seconds after the second player has joined.
      *
      * The client should connect on port 6666.
      *
