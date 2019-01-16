@@ -300,11 +300,6 @@ public interface Protocol {
      */
     String ERROR = "ERROR";
     
-    /**
-     * Makes sure that the tile send by the player is actually owned by the player.
-     */
-     boolean checkValidTile(Tile tile);
-    
 
 
     /* ---------------------------EXTRA Functionality ---------------------------	 */
