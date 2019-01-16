@@ -4,13 +4,16 @@ package project_protocol;
  * Project Module 2 2018-2019: 'Spectrangle'
  * Interface Protocol
  * @author  Vincent van Engers
- * @version 1.0.5
+ * @version 1.0.6
  *
  *
  */
 
 /**
  * Changelog
+ * 
+ * version 1.0.6
+ * The server needs to make sure there are no two clients with the same name.
  * 
  * version 1.0.5
  * Changed gameover message to contain "|" as splitters
@@ -52,6 +55,7 @@ public interface Protocol {
      * The client should connect on port 6666.
      *
      *
+     * WATCH OUT: The server needs to make sure there are no two clients with the same name.
      * WATCH OUT: The coordinate denotation in this document is (row, column)
      * WATCH OUT: When a client disconnects from the server, this player will be replace by a dumb AI player.
      * WATCH OUT: SEQUENCE OF PARAMETERS OF FUNCTIONS IS EXPLICIT. FOLLOW SEQUENCE AS INDICATED IN JAVADOC.
@@ -82,7 +86,7 @@ public interface Protocol {
      * 				 /R  B\ 		  /G  R\ 		  /B  G\
      * 				/  G   \		 /  B   \		 /  R   \
      * 				--------		 --------  	 	 --------
-     *				Flipped			 Flipped		  Flipped
+     *				Rotated			 Rotated		  Rotated
      *				0 times			 1 time			  2times
      */
 
