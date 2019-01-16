@@ -200,7 +200,7 @@ public interface Protocol {
      * the game has started with players Barry, Jack and Mary.
      * They all have the following four tiles:
      * (Red, Blue, Green, 6) (Purple, White, Green, 5) (Red, Blue, Yellow, 6) (Red, Blue, Green, 1)
-     * "GAMESTARTED,PLAYERTILES,TILE,R,B,G,6,TILE,P,W,G,5,TILE,R,B,Y,6,TILE,R,B,G,1,Barry,PLAYERTILES,TILE,R,B,G,6,TILE,P,W,G,5,TILE,R,B,Y,6,TILE,R,B,G,1,Jack,PLAYERTILES,TILE,R,B,G,6,TILE,P,W,G,5,TILE,R,B,Y,6,TILE,R,B,G,1,Mary"
+     * "GAMESTARTED,PLAYERTILES|TILE,R,B,G,6|TILE,P,W,G,5|TILE,R,B,Y,6|TILE,R,B,G,1|Barry,PLAYERTILES|TILE,R,B,G,6|TILE,P,W,G,5|TILE,R,B,Y,6|TILE,R,B,G,1|Jack,PLAYERTILES|TILE,R,B,G,6|TILE,P,W,G,5|TILE,R,B,Y,6|TILE,R,B,G,1|Mary"
      *
      */
     String GAMESTARTED = "GAMESTARTED";
