@@ -4,7 +4,7 @@ package project_protocol;
  * Project Module 2 2018-2019: 'Spectrangle'
  * Interface Protocol
  * @author  Vincent van Engers
- * @version 1.0.3
+ * @version 1.0.4
  *
  *
  */
