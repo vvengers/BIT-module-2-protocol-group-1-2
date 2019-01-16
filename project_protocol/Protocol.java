@@ -4,13 +4,17 @@ package project_protocol;
  * Project Module 2 2018-2019: 'Spectrangle'
  * Interface Protocol
  * @author  Vincent van Engers
- * @version 1.0.1
+ * @version 1.0.2
  *
  *
  */
 
 /**
  * Changelog
+ * 
+ * version 1.0.2
+ * Removed vaildity check method
+ * 
  * version 1.0.1
  * The game will now start 60 seconds after the second player has joined.
  * 
@@ -299,7 +303,6 @@ public interface Protocol {
      *
      */
     String ERROR = "ERROR";
-    
 
 
     /* ---------------------------EXTRA Functionality ---------------------------	 */
