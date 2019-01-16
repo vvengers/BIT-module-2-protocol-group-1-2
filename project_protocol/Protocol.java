@@ -4,13 +4,16 @@ package project_protocol;
  * Project Module 2 2018-2019: 'Spectrangle'
  * Interface Protocol
  * @author  Vincent van Engers
- * @version 1.0.2
+ * @version 1.0.3
  *
  *
  */
 
 /**
  * Changelog
+ * 
+ * version 1.0.3
+ * Added definition for coordinate
  * 
  * version 1.0.2
  * Removed vaildity check method
@@ -42,6 +45,7 @@ public interface Protocol {
      * The client should connect on port 6666.
      *
      *
+     * WATCH OUT: The coordinate denotation in this document is (row, column)
      * WATCH OUT: When a client disconnects from the server, this player will be replace by a dumb AI player.
      * WATCH OUT: SEQUENCE OF PARAMETERS OF FUNCTIONS IS EXPLICIT. FOLLOW SEQUENCE AS INDICATED IN JAVADOC.
      * WATCH OUT: ALL PARAMETERS ARE OF THE TYPE "STRING" AND SEPARATED BY A ","
