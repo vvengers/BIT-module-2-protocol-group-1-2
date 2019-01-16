@@ -4,36 +4,7 @@ package project_protocol;
  * Project Module 2 2018-2019: 'Spectrangle'
  * Interface Protocol
  * @author  Vincent van Engers
- * @version 1.0.7
- *
- *
- */
-
-/**
- * Changelog
- * 
- * version 1.0.7
- * Removed the MOVESKIPPED message and added the TURNMADE message.
- * 
- * version 1.0.6
- * The server needs to make sure there are no two clients with the same name.
- * 
- * version 1.0.5
- * Changed gameover message to contain "|" as splitters
- * 
- * version 1.0.4
- * Removed error codes
- * Added explanation for what to do with errors.
- * 
- * version 1.0.3
- * Added definition for coordinate
- * 
- * version 1.0.2
- * Removed vaildity check method
- * 
- * version 1.0.1
- * The game will now start 60 seconds after the second player has joined.
- * 
+ * @version 1.0.0
  */
 
 
@@ -41,91 +12,72 @@ public interface Protocol {
 
     /**
      * The server stands in between all clients. The clients do not interact with each other but only with the server.
-     * All server and clients have a copy of the game. The server has the ‘master version’. It is the responsibility
-     * of the server to send updates of what happens in the ‘master version’ to the players.
+     * It is the responsibility of the server to send updates of what happens to the players.
      *
-     * Information will be sent in the form of string messages.
-     * Every message consists of multiple attributes. Every attribute is separated by a “,”.
-     * The first attribute of every message is the identifier. The identifier signifies what kind of message it is.
-     * A player always has 90 seconds to respond to a move-request from the server. If they surpass these 90 seconds
-     * the server will skip their turn. If the player tries to make invalid moves, such as placing tiles in locations that 
-     * do not exist, their turn is skipped.
-     * Messages that are in a wrong format or should not have been sent are answered
-     * with an error message as defined below.
+     * - Information will be sent in the form of string messages.
+     * - Every message consists of multiple attributes. Every attribute is separated by a “,”.
+     * - The first attribute of every message is the identifier. This word signifies what kind of message it is.
+     * - A player always has 90 seconds to respond to a move-request from the server. If they surpass these 90 seconds
+     *   the server will kick the player. If the player tries to make invalid moves, such as placing tiles in locations that
+     *   do not exist, they are kicked.
+     * - If the client sends an unknown message and the server was not waiting for a response from that client,
+     * 		then the server should ignore the client.
+     * - The client should connect on port 6666.
+     * - The game will start 60 seconds after the second player has joined.
+     * - A coordinate is always written as (row, column)
+     * - The server needs to make sure there are no two clients with the same name.
      * 
-     * The game will start 60 seconds after the second player has joined.
+     * - Whenever a client is kicked the following happens to the game:
+     * 		- Case 1 client left after kick: This client wins end game ends.
+     * 		- Case 2 or more clients left after kick: Game continues, the kicked clients tiles
+     * 			are put back in the bag and a PLAYERKICKED is send to all clients.
      *
-     * The client should connect on port 6666.
-     *
-     *
-     * WATCH OUT: The server needs to make sure there are no two clients with the same name.
-     * WATCH OUT: The coordinate denotation in this document is (row, column)
-     * WATCH OUT: When a client disconnects from the server, this player will be replace by a dumb AI player.
      * WATCH OUT: SEQUENCE OF PARAMETERS OF FUNCTIONS IS EXPLICIT. FOLLOW SEQUENCE AS INDICATED IN JAVADOC.
-     * WATCH OUT: ALL PARAMETERS ARE OF THE TYPE "STRING" AND SEPARATED BY A ","
-     * WATCH OUT: PARAMETERS MAY NOT INCLUDE " " AND "\"
-     * WATCH OUT: Coordinates are used in the same as described in the kick of session of the project.
-     * WATCH OUT: When a tile gets flipped(changes the directions at which it points), 
-     * 			  the left and right colour switch.
-     * 			  Example:
-     * 				   /\
-     * 				  / 6\
-     * 				 /R  B\
-     * 				/  G   \
-     * 				--------
-     * 					|
-     * 					| when flipped
-     * 					V
-     * 				--------
-     * 				\   G  /
-     * 				 \B  R/
-     * 				  \6 /
-     *  			   \/
-     * 				
-     * WATCH OUT: when a tile can only rotate clockwise. 
-     * 		This is what it looks like:
-     * 	  			   /\   			/\				/\
-     * 				  / 6\			   / 6\			   / 6\
-     * 				 /R  B\ 		  /G  R\ 		  /B  G\
-     * 				/  G   \		 /  B   \		 /  R   \
-     * 				--------		 --------  	 	 --------
-     *				Rotated			 Rotated		  Rotated
-     *				0 times			 1 time			  2times
-     */
-
-
-    /**
+     * WATCH OUT: ALL PARAMETERS ARE OF THE TYPE "STRING" AND SEPARATED BY A "," (the DELIMITER)
+     * WATCH OUT: PARAMETERS MAY NOT INCLUDE spaces (" "), slashes ("\"), pipes ("|") and commas (",")
+     * WATCH OUT: Coordinates are used in the same way as described in the kick of session of the project.
+     *
+     *
      * The protocol
      * The protocol begins after a connection with the server has been established.
-     * 1.	The client sends a connect-request to the server.
-     * 2.	When the player has been added to the game and the game has started,
-     *      then the server sends a game-started to the player.
-     * 3.	The server uses a random number generator to choose who may start.
-     * 4.	The server sends a move-request to the player whose turn it is.
-     * 5.	The player can either sent a move message, a tile-replace or a skip-move.
-     * 6.	Server response:
-     * 		No matter if a, b or c is executed, a TURNMADE is send to every client afterwards. This
-     * 		is also the confirm for the player who's turn it was.
+     * 1.	The client sends a CONNECTREQUEST to the server.
+     * 2. 	The server sends a CONNECTACCEPT to the client.
+     * 3.	The player will be added to a game when it sends a JOINGAME
+     * 4.	When the player has been added to the game and the game has started,
+     *      then the server sends a GAMESTARTED to the player.
+     * 5.	The server chooses who may start and sends a MOVEREQUEST to this player.
+     * 6.	The player can either sent a MOVE message, a TILEREPLACE or a SKIP.
+     * 7.   Server response:
+     * 		
+     * 		The server will send a TURNMADE to all players after any of the following procedures:		
      * 
-     *  a.	Case move message: the server checks if the move is valid. If the move is not valid than the server
-     *      will skip the players move and sent a skip-move. If the move is valid than the server will send a
-     *      tile-representation (of a tile from the bag) to the player.
-     *  b.	Case tile-replace: the server checks if the player really cannot do any more moves.
-     *      If the player can actually make a move with the tiles the player has, the server will skip
-     *      the players move.
-     *      If the player truly cannot make any more moves, the server will remove one tile from
-     *      the bag and put the given tile in.
-     *   c.	Case skip-move: the server will skip the players move.
-     * 7.
-     *   a.	Case game over: the server will send a game-over message to all players, close the game and
-     *      disconnects from all players.
-     *   b.	Case game not over: go to step 4.
+     *      a.	Case MOVE:
+     *          The server checks if the move is valid. If the move is not valid then the server
+     *          will ki k the player and sent a PLAYERKICKED to all players. If the move is
+     *          valid the server will send a tile representation (of a tile from the bag) to the
+     *          player.
+     *      b.	Case TILEREPLACE:
+     *          The server checks if the player really cannot do any more moves.
+     *          If the player can actually make a move with the tiles the player has, the server will kick
+     *          the player and send a PLAYERKICKED to all players
+     *          If the player truly cannot make any more moves, the server will remove one tile from
+     *          the bag.
+     *      c.	Case SKIPMOVE:
+     *      	If the player can actually make a move with the tiles the player has, the server will kick
+     *          the player and send a PLAYERKICKED to all players.
+     *          If the player truly cannot make any more moves the server will skip the players move.
+     * 8.   Proceeding...
+     *      a.	Case GAMEOVER:
+     *          The server will send a GAMEOVER message to all players and close the game: go to step 3.
+     *      b.	Case game not over: go to step 4.
      */
-	
-	int TIMEOUT = 90; //seconds
-    String DELIMITER = ",";
-    int PORT = 6666;
 
+    
+    int TIMEOUT = 90; //seconds
+    String DELIMITER = ",";
+    int PORT = 666; //to be changed to any port between 1024 to 65535. 6666? ;)
+    
+    
     /**
      * Colours will be represented in the following way
      */
@@ -140,22 +92,66 @@ public interface Protocol {
     /**
      * CONNECTREQUEST
      * Client --> Server
-     * Is used to connect to the server.
+     * Is used to connect to the server and show what kind of extensions the client supports.
      *
      * List of arguments
      * - Name of client
+     * - Chatbox: format:"B" (optional)
+     * - Challenge: format:"C" (optional)
+     * - Leaderboard: format:"L" (optional)
+     * 
+     * Using one of these optional arguments does mean that the client supports AND wants 
+     * to use the extension.
      *
      * Example:
-     * Barry wants to joint the server:
-     * "CONNECTREQUEST,Barry"
+     * Client Barry wants to join the server and has implemented the 
+     * chatbox and challenge extension:
+     * "CONNECTREQUEST,Barry,BC"
      *
      */
     String CONNECTREQUEST = "CONNECTREQUEST";
-
+    
+    /**
+     * CONNECTACCEPT 
+     * Server --> Client
+     * Is used to show that the connection has been accepted and what kind of extensions the server
+     * supports.
+     * List of arguments
+     * - Chatbox: format:"B" (optional)
+     * - Challenge: format:"C" (optional)
+     * - Leaderboard: format:"L" (optional)
+     * 
+     * Example:
+     * The server accepts the connection and uses the leaderboard:
+     * "CONNECTACCEPT,L"
+     * 
+     */
+    String CONNECTACCEPT = "CONNECTACCEPT";
+    
+    /**
+     * PLAYERKICKED
+     * Server --> Client
+     * is used to show which player is kicked
+     *
+     * Argument:
+     * - name of kicked player
+     * 
+     */
+    String PLAYERKICKED = "PLAYERKICKED";
+    
+    /**
+     * JOINGAME
+     * Client --> Server
+     * Is used to communicate the clients wants to join a game.
+     * 
+     *  Example:
+     *  "JOINGAME"
+     */
+    String JOINGAME = "JOINGAME";
 
     /**
-     *  Tile Representation
-     * Is used to represent a tile. 
+     * Tile Representation
+     * Is used to represent a tile. Colours are seen from the upwards pointing Tile
      *
      * List of arguments:
      * -Colour of left side
@@ -164,32 +160,31 @@ public interface Protocol {
      * -Score of tile                               /\
      *                                             / 6\
      * Example: We want to represent the triangle /R  B\
-     * "TILE,R,B,G,6"                            /  G   \
+     * "TILE,RBG6                                /  G   \
      *                                           --------
      *                                           --------
-     * Example: We want to represent the triangle\   W  /
+     * Example: We want to represent the triangle\   5  /
      *                                            \Y  P/
-     *  "TILE,Y,W,P,5"                             \5 /
-     *                                              \/
+     *  "TILE,PWY5"                                \W /
+     *  !! Note the switched P and Y                \/
+     *  !! (tile is upside down)
      */
     String TILE = "TILE";
 
     /**
      * PLAYERTILES
-     * Is used to represent all tiles in a players inventory
+     * Is used to represent all tiles in a players' inventory
      *
      * List of arguemnts:
-     * -first tile
-     * -second tile
-     * -third tile
-     * -fourth tile
-     * -name of player
-     *
-     * WATCH OUT: the individual tiles are split by "|"
+     * - first tile
+     * - second tile
+     * - third tile
+     * - fourth tile
+     * - name of player
      *
      * Example:
-     * Barry have the tiles (Red, Blue, Green, 6) (Purple, White, Green, 5) (Red, Blue, Yellow, 6) (Red, Blue, Green, 1)
-     * "PLAYERTILES|TILE,R,B,G,6|TILE,P,W,G,5|TILE,R,B,Y,6|TILE,R,B,G,1|Barry"
+     * Barry has the tiles (Red, Blue, Green, 6) (Purple, White, Green, 5) (Red, Blue, Yellow, 6) (Red, Blue, Green, 1)
+     * "PLAYERTILES,RBG6,PWG5,RBY6,RBG1,Barry"
      *
      */
     String PLAYERTILES = "PLAYERTILES";
@@ -208,7 +203,7 @@ public interface Protocol {
      * the game has started with players Barry, Jack and Mary.
      * They all have the following four tiles:
      * (Red, Blue, Green, 6) (Purple, White, Green, 5) (Red, Blue, Yellow, 6) (Red, Blue, Green, 1)
-     * "GAMESTARTED,PLAYERTILES|TILE,R,B,G,6|TILE,P,W,G,5|TILE,R,B,Y,6|TILE,R,B,G,1|Barry,PLAYERTILES|TILE,R,B,G,6|TILE,P,W,G,5|TILE,R,B,Y,6|TILE,R,B,G,1|Jack,PLAYERTILES|TILE,R,B,G,6|TILE,P,W,G,5|TILE,R,B,Y,6|TILE,R,B,G,1|Mary"
+     * "GAMESTARTED,RBG6,PWG5,RBY6,RBG1,Barry,RBG6,PWG5,RBY6,RBG1,Jack,RBG6,PWG5,RBY6,RBG1,Mary"
      *
      */
     String GAMESTARTED = "GAMESTARTED";
@@ -228,10 +223,35 @@ public interface Protocol {
      *
      * Example:
      * We want to move the tile (Green, Red, Blue, 6), twice rotated at location (0,3)
-     * "MOVE,TILE,G,R,B,6,2,0,3"
+     * "MOVE,GRB6,2,03"
      *
      */
     String MOVE = "MOVE";
+    
+    /**
+     * Turn done
+     * Is used to inform clients that a player has played a turn.
+     * Server --> Client
+     * 
+     * List of arguemnts:
+     * - What kind of turn. An actual move [M], tile replacement[R], move was skipped[S]
+     * - name
+     * - move (only used with [m])
+     * - playerTiles (only used with[R])
+     * 
+     * Examples:
+     * Barry has made put tile (G, R, B, 6) twice rotated at (0, 2):
+     * "TURNMADE,Barry,M,,GRB6,2,03"
+     * 
+     * Barry wanted to replace tile (G, R, B, 6) and received tile (Y, Y, Y, 1)
+     * "TURNMADE,Barry,R,RYYY1,PWG5,RBY6,RBG1"
+     * 
+     * Barry's move was skipped (either because he choose to do so or because he did something that
+     * made the server skip his move)
+     * "TURNMADE,Barry,S"
+     * 
+     */
+    String TURNMADE = "TURNMADE";
 
     /**
      * move-request
@@ -241,7 +261,7 @@ public interface Protocol {
     String MOVEREQUEST = "MOVEREQUEST";
 
     /**
-     * tile-replace
+     * TILEREPLACE
      * Is used to tell the server that the player wants to replace a tile.
      *
      * List of arguments:
@@ -249,7 +269,7 @@ public interface Protocol {
      *
      * Example:
      * Barry wants to replace his tile (Red, Green Blue, 6)
-     * "TILEREPLACE,TILE,R,G,B,6"
+     * "TILEREPLACE,RGB6"
      *
      */
     String TILEREPLACE = "TILEREPLACE";
@@ -266,44 +286,19 @@ public interface Protocol {
     String SKIP = "SKIP";
     
     /**
-     * Turn done
-     * Is used to inform clients that a player has played a turn.
-     * Server --> Client
-     * 
-     * List of arguemnts:
-     * - What kind of turn. An actual move [M], tile replacement[R], move was skipped[S]
-     * - name
-     * - move (only used with [m])
-     * - playerTiles (only used with[R])
-     * 
-     * Examples:
-     * Barry has made put tile (G, R, B, 6) twice rotated at (0, 2):
-     * "TURNMADE,Barry,M,MOVE,TILE,G,R,B,6,2,0,3"
-     * 
-     * Barry wanted to replace tile (G, R, B, 6) and received tile (Y, Y, Y, 1)
-     * "TURNMADE,Barry,R,PLAYERTILES|TILE,Y,Y,Y,1|TILE,P,W,G,5|TILE,R,B,Y,6|TILE,R,B,G,1|Barry"
-     * 
-     * Barry's move was skipped (either because he choose to do so or because he did something that
-     * made the server skip his move)
-     * "TURNMADE,Barry,S"
-     * 
-     */
-    String TURNMADE = "TURNMADE";
-    
-    /**
      * GAMEOVER
-     * Is used to inform the players that the game is over and what the points are. 
+     * Is used to inform the players that the game is over and what the points are.
      * Who the winner is, is implied by the points.
      *
      * List of arguments:
-     * -name of player 1
-     * -score of player 1
-     * -name of player 2
-     * -score of player 2
-     * -name of player 3 (optional)
-     * -score of player 3 (optional)
-     * -name of player 4 (optional)
-     * -score of player 4 (optional)
+     * - name of player 1
+     * - score of player 1
+     * - name of player 2
+     * - score of player 2
+     * - name of player 3 (optional)
+     * - score of player 3 (optional)
+     * - name of player 4 (optional)
+     * - score of player 4 (optional)
      *
      * Example:
      * The game is over and Barry has 40 points, Mary has 30 points and Jack has 20 points.
@@ -312,23 +307,6 @@ public interface Protocol {
      *
      */
     String GAMEOVER = "GAMEOVER";
-
-    /**
-     * ERROR
-     * Is used to inform a player that something has gone wrong.
-     *
-     * List of arguments:
-     * -error message
-     *
-     * Example:
-     * A player has send an invalid message
-     * "ERROR,You have send and invalid message."
-     * 
-     * A player has sent a tile they do not own
-     * "ERROR, You do not own this tile."
-     *
-     */
-    String ERROR = "ERROR";
 
 
     /* ---------------------------EXTRA Functionality ---------------------------	 */
@@ -386,7 +364,7 @@ public interface Protocol {
 
     /**
      * request-challenge
-     * Is ussd by the client to request a challenge.
+     * Is used by the client to request a challenge.
      *
      * List of arguments:
      * - name 1
@@ -415,7 +393,7 @@ public interface Protocol {
 
     /**
      * challenge response
-     * This is used by the client being challenged to accept. They have 60 seconds to accept the challenge.
+     * This is used by the client being challenged to refuse. They have 60 seconds to refuse the challenge.
      *
      * Example:
      * "ACCEPTCHALLENGE"
@@ -425,33 +403,18 @@ public interface Protocol {
 
     /**
      * request leaderboard
-     * Client -> Server
      * Is used by the client to request all leaderboards.
-     * 
-     * List of arguments:
-     * - parameter
-     *
-     * List of parameters: 
-     * - top n scores				syntax:"top[n]"
-     * - scores above n				syntax:"above[n]"
-     * - scroes below n				syntax:"below[n]"
-     * - average score of the day	syntax:"avg"
-     * 
-     * Example:
-     * Barry wants the top 13 scores: "REQUESTLEADERBOARD,top13"
-     * Barry wants all scores above 55: "REQUESTLEADERBOARD,above55"
-     * Barry wants all scores below 55: "REQUESTLEADERBOARD,below55"
-     * Barry wants the average score of the day: "REQUESTLEADERBOARD,avg"
+     * "REQUESTLEADERBOARD"
      *
      */
     String REQUESTLEADERBOARD = "REQUESTLEADERBOARD";
 
     /**
      * sent leaderboard
-     * Is used to sent the leaderboards to a client
+     * Is used to send the leaderboards to a client
      *
      * List of arguments:
-     *  For every player the following three arguments sould be added. Each player is separated by a "\".
+     * For every player the following three arguments should be added.
      * - name of player who did a move
      * - score associated with the move
      * - time = point of time at which the score has been received in seconds since 1 January 1970 (System.currentTimeMillis())
