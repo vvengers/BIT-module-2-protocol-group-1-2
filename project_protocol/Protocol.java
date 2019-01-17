@@ -20,7 +20,7 @@ package project_protocol;
  * - Port 6666 instead of 666
  * - Added missing colons
  * - Added illustrations
- * - Added list of valid tiles
+ * - Added list of valid tiles. These are the tiles everyone must use!
  * - Added not for chat messages
  * - Other smaller mistakes
  */
@@ -122,6 +122,9 @@ public interface Protocol {
 	
 	/**
 	 * List of valid tiles:
+	 * 
+	 * Fist letter is left, second is upper/lower and the third is right.
+	 * 
 	 * RRR6
 	 * BBB6
 	 * GGG6
