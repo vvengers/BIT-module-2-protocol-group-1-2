@@ -333,7 +333,7 @@ public interface Protocol {
      * "TURNMADE,M,Barry,RBG6,PWG5,RBY6,RBG1,GRB6,2,03"
      * 
      * Barry has replaced his tile (G, R, B, 6) and received tile (Y, Y, Y, 1)
-     * "TURNMADE,R,Barry,RBG6,PWG5,RBY6,RBG1,RYYY1,PWG5,RBY6,RBG1"
+     * "TURNMADE,R,Barry,RBG6,PWG5,RBY6,RBG1,RYYY1,"
      * 
      * Barry has skipped his move.
      * "TURNMADE,S,Barry,RBG6,PWG5,RBY6,RBG1"
