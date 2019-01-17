@@ -97,7 +97,7 @@ public interface Protocol {
      *          The server checks if the move is valid. If the move is not valid then the server
      *          will ki k the player and sent a PLAYERKICKED to all players. If the move is
      *          valid the server will send a tile representation (of a tile from the bag) to the
-     *          player.
+     *          players.
      *      b.	Case TILEREPLACE:
      *          The server checks if the player really cannot do any more moves.
      *          If the player can actually make a move with the tiles the player has, the server will kick
