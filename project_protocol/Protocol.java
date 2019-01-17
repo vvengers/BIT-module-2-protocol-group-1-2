@@ -4,7 +4,19 @@ package project_protocol;
  * Project Module 2 2018-2019: 'Spectrangle'
  * Interface Protocol
  * @author  Vincent van Engers
- * @version 1.0.0
+ * @version 1.0.1
+ */
+
+/**
+ * changelog
+ * 1.0.1
+ * - SKIPMOVE changed to SKIP
+ * - Port 6666 instead of 666
+ * - Added missing colons
+ * - Added illustrations
+ * - Added list of valid tiles
+ * - Added not for chat messages
+ * - Other smaller mistakes
  */
 
 
@@ -31,11 +43,41 @@ public interface Protocol {
      * 		- Case 1 client left after kick: This client wins end game ends.
      * 		- Case 2 or more clients left after kick: Game continues, the kicked clients tiles
      * 			are put back in the bag and a PLAYERKICKED is send to all clients.
+     * 
+     * - For the chat extension, the server recieves chatmessages from the clients and destributes
+     * 	 these messages to the other clients. Clients never directly communicate!
      *
      * WATCH OUT: SEQUENCE OF PARAMETERS OF FUNCTIONS IS EXPLICIT. FOLLOW SEQUENCE AS INDICATED IN JAVADOC.
      * WATCH OUT: ALL PARAMETERS ARE OF THE TYPE "STRING" AND SEPARATED BY A "," (the DELIMITER)
      * WATCH OUT: PARAMETERS MAY NOT INCLUDE spaces (" "), slashes ("\"), pipes ("|") and commas (",")
      * WATCH OUT: Coordinates are used in the same way as described in the kick of session of the project.
+     * WATCH OUT: When a tile gets flipped(changes the directions at which it points), 
+     * 			  the left and right colour switch.
+     * 			  Example:
+     * 				   /\
+     * 				  / 6\
+     * 				 /R  B\
+     * 				/  G   \
+     * 				--------
+     * 					|
+     * 					| when flipped
+     * 					V
+     * 				--------
+     * 				\   G  /
+     * 				 \B  R/
+     * 				  \6 /
+     *  			   \/
+     * 				
+     * WATCH OUT: when a tile can only rotate clockwise. 
+     * 		This is what it looks like:
+     * 	  			   /\   			/\				/\
+     * 				  / 6\			   / 6\			   / 6\
+     * 				 /R  B\ 		  /G  R\ 		  /B  G\
+     * 				/  G   \		 /  B   \		 /  R   \
+     * 				--------		 --------  	 	 --------
+     *				Rotated			 Rotated		  Rotated
+     *				0 times			 1 time			  2times
+     *
      *
      *
      * The protocol
@@ -62,7 +104,7 @@ public interface Protocol {
      *          the player and send a PLAYERKICKED to all players
      *          If the player truly cannot make any more moves, the server will remove one tile from
      *          the bag.
-     *      c.	Case SKIPMOVE:
+     *      c.	Case SKIP:
      *      	If the player can actually make a move with the tiles the player has, the server will kick
      *          the player and send a PLAYERKICKED to all players.
      *          If the player truly cannot make any more moves the server will skip the players move.
@@ -71,11 +113,51 @@ public interface Protocol {
      *          The server will send a GAMEOVER message to all players and close the game: go to step 3.
      *      b.	Case game not over: go to step 4.
      */
+	
+	/**
+	 * List of valid tiles:
+	 * RRR6
+	 * BBB6
+	 * GGG6
+	 * YYY6
+	 * PPP6
+	 * RRY5
+	 * RRP5
+	 * BBR5
+	 * BBP5
+	 * GGR5
+	 * GGB5
+	 * YYG5
+	 * YYB5
+	 * PPY5
+	 * PPG5
+	 * RRB4
+	 * RRG4
+	 * BBG4
+	 * BBY4
+	 * GGY4
+	 * GGP4
+	 * YYR4
+	 * YYP4
+	 * PPR4
+	 * PPB4
+	 * YBP3
+	 * RGY3
+	 * BGP3
+	 * GRB3
+	 * BRP2
+	 * YPR2
+	 * YPG2	
+	 * GRP1
+	 * BYG1
+	 * RYP1
+	 * WWW1
+	 */
 
     
     int TIMEOUT = 90; //seconds
     String DELIMITER = ",";
-    int PORT = 666; //to be changed to any port between 1024 to 65535. 6666? ;)
+    int PORT = 6666;
     
     
     /**
@@ -160,7 +242,7 @@ public interface Protocol {
      * -Score of tile                               /\
      *                                             / 6\
      * Example: We want to represent the triangle /R  B\
-     * "TILE,RBG6                                /  G   \
+     * "TILE,RBG6"                               /  G   \
      *                                           --------
      *                                           --------
      * Example: We want to represent the triangle\   5  /
@@ -240,14 +322,13 @@ public interface Protocol {
      * - playerTiles (only used with[R])
      * 
      * Examples:
-     * Barry has made put tile (G, R, B, 6) twice rotated at (0, 2):
-     * "TURNMADE,Barry,M,,GRB6,2,03"
+     * Barry has made put tile (G, R, B, 6) twice rotated at (0, 3):
+     * "TURNMADE,Barry,M,GRB6,2,03"
      * 
-     * Barry wanted to replace tile (G, R, B, 6) and received tile (Y, Y, Y, 1)
+     * Barry has replaced his tile (G, R, B, 6) and received tile (Y, Y, Y, 1)
      * "TURNMADE,Barry,R,RYYY1,PWG5,RBY6,RBG1"
      * 
-     * Barry's move was skipped (either because he choose to do so or because he did something that
-     * made the server skip his move)
+     * Barry has skipped his move.
      * "TURNMADE,Barry,S"
      * 
      */
