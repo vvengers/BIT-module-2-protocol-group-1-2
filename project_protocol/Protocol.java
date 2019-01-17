@@ -4,11 +4,14 @@ package project_protocol;
  * Project Module 2 2018-2019: 'Spectrangle'
  * Interface Protocol
  * @author  Vincent van Engers
- * @version 1.0.1
+ * @version 1.0.2
  */
 
 /**
  * changelog
+ * 1.0.2
+ * - Add pipes to gameStarted message
+ * 
  * 1.0.1
  * - SKIPMOVE changed to SKIP
  * - Port 6666 instead of 666
@@ -285,7 +288,7 @@ public interface Protocol {
      * the game has started with players Barry, Jack and Mary.
      * They all have the following four tiles:
      * (Red, Blue, Green, 6) (Purple, White, Green, 5) (Red, Blue, Yellow, 6) (Red, Blue, Green, 1)
-     * "GAMESTARTED,RBG6,PWG5,RBY6,RBG1,Barry,RBG6,PWG5,RBY6,RBG1,Jack,RBG6,PWG5,RBY6,RBG1,Mary"
+     * "GAMESTARTED|RBG6,PWG5RBY6,RBG1,Barry|RBG6,PWG5,RBY6,RBG1,Jack|RBG6,PWG5,RBY6,RBG1,Mary|"
      *
      */
     String GAMESTARTED = "GAMESTARTED";
