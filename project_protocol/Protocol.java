@@ -9,6 +9,9 @@ package project_protocol;
 
 /**
  * changelog
+ * 1.0.3
+ * - Changes to TURNMADE 
+ * 
  * 1.0.2
  * - Add pipes to gameStarted message
  * 
@@ -98,9 +101,9 @@ public interface Protocol {
      * 
      *      a.	Case MOVE:
      *          The server checks if the move is valid. If the move is not valid then the server
-     *          will ki k the player and sent a PLAYERKICKED to all players. If the move is
-     *          valid the server will send a tile representation (of a tile from the bag) to the
-     *          players.
+     *          will kick the player and sent a PLAYERKICKED to all players. If the move is
+     *          valid the server will put the tile on the board. When TURNMADE is send, the playertiles
+     *          includes a new tile from the bag.
      *      b.	Case TILEREPLACE:
      *          The server checks if the player really cannot do any more moves.
      *          If the player can actually make a move with the tiles the player has, the server will kick
@@ -321,8 +324,9 @@ public interface Protocol {
      * List of arguemnts:
      * - What kind of turn. An actual move [M], tile replacement[R], move was skipped[S]
      * - name
+     * - PlayerTiles of the player that made the move
+     * - What tile was replaced (only used with [R])
      * - move (only used with [M])
-     * - playerTiles (only used with[R])
      * 
      * Examples:
      * Barry has made put tile (G, R, B, 6) twice rotated at (0, 3):
