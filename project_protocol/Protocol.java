@@ -156,7 +156,7 @@ public interface Protocol {
 	 * YPG2	
 	 * GRP1
 	 * BYG1
-	 * RYP1
+	 * RYB1
 	 * WWW1
 	 */
 
