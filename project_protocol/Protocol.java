@@ -321,7 +321,7 @@ public interface Protocol {
      * List of arguemnts:
      * - What kind of turn. An actual move [M], tile replacement[R], move was skipped[S]
      * - name
-     * - move (only used with [m])
+     * - move (only used with [M])
      * - playerTiles (only used with[R])
      * 
      * Examples:
