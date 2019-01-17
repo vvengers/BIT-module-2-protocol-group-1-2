@@ -330,13 +330,13 @@ public interface Protocol {
      * 
      * Examples:
      * Barry has made put tile (G, R, B, 6) twice rotated at (0, 3):
-     * "TURNMADE,Barry,M,GRB6,2,03"
+     * "TURNMADE,M,Barry,RBG6,PWG5,RBY6,RBG1,GRB6,2,03"
      * 
      * Barry has replaced his tile (G, R, B, 6) and received tile (Y, Y, Y, 1)
-     * "TURNMADE,Barry,R,RYYY1,PWG5,RBY6,RBG1"
+     * "TURNMADE,R,Barry,RBG6,PWG5,RBY6,RBG1,RYYY1,PWG5,RBY6,RBG1"
      * 
      * Barry has skipped his move.
-     * "TURNMADE,Barry,S"
+     * "TURNMADE,S,Barry,RBG6,PWG5,RBY6,RBG1"
      * 
      */
     String TURNMADE = "TURNMADE";
