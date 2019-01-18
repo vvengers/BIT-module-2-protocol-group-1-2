@@ -4,10 +4,19 @@ package project_protocol;
  * Project Module 2 2018-2019: 'Spectrangle'
  * Interface Protocol
  * @author  Vincent van Engers
- * @version 1.0.2
+ * @version 1.0.4
  */
 
 /**
+ * changelog
+ * 1.0.4
+ * - Changed from using coordinate to index
+ * - Major change to starting the game:
+ * 	 Instead of the game starting 60 seconds after the second player has joined,
+ * 	 players can give a preference when sending JOINGAME.
+ *   The server will have multiple queues. One for every preference(2,3,4).
+ *   The players preference will be used! And there will not be an automic switch to other queues.
+ * 
  * changelog
  * 1.0.3
  * - Changes to TURNMADE 
@@ -41,9 +50,10 @@ public interface Protocol {
      * - If the client sends an unknown message and the server was not waiting for a response from that client,
      * 		then the server should ignore the client.
      * - The client should connect on port 6666.
-     * - The game will start 60 seconds after the second player has joined.
-     * - A coordinate is always written as (row, column)
      * - The server needs to make sure there are no two clients with the same name.
+     * - Players can give a preference when sending JOINGAME.
+     *   The server will have multiple queues. One for every preference(2,3,4).
+     *   The players preference will be used! And there will not be an automic switch to other queues.
      * 
      * - Whenever a client is kicked the following happens to the game:
      * 		- Case 1 client left after kick: This client wins end game ends.
@@ -235,8 +245,12 @@ public interface Protocol {
      * Client --> Server
      * Is used to communicate the clients wants to join a game.
      * 
+     * Argument:
+     * - playercount preference
+     * 
      *  Example:
-     *  "JOINGAME"
+     *  Barry wants to play a game with two players
+     *  "JOINGAME,2"
      */
     String JOINGAME = "JOINGAME";
 
@@ -306,15 +320,14 @@ public interface Protocol {
      * List of arguments:
      * -tile-representation
      * -rotation
-     * -row
-     * -column
+     * -index
      *
      * Requirements for agruments:
      * -Rotation can be 0, 1 or 2 and denotes the clockwise rotation of the tile/colours.
      *
      * Example:
-     * We want to move the tile (Green, Red, Blue, 6), twice rotated at location (0,3)
-     * "MOVE,GRB6,2,03"
+     * We want to move the tile (Green, Red, Blue, 6), twice rotated at index 3
+     * "MOVE,GRB6,2,3"
      *
      */
     String MOVE = "MOVE";
@@ -332,8 +345,8 @@ public interface Protocol {
      * - move (only used with [M])
      * 
      * Examples:
-     * Barry has made put tile (G, R, B, 6) twice rotated at (0, 3):
-     * "TURNMADE,M,Barry,RBG6,PWG5,RBY6,RBG1,GRB6,2,03"
+     * Barry has made put tile (G, R, B, 6) twice rotated at index 3:
+     * "TURNMADE,M,Barry,RBG6,PWG5,RBY6,RBG1,GRB6,2,3"
      * 
      * Barry has replaced his tile (G, R, B, 6) and received tile (Y, Y, Y, 1)
      * "TURNMADE,R,Barry,RBG6,PWG5,RBY6,RBG1,RYYY1,"
