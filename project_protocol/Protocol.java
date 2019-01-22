@@ -4,11 +4,14 @@ package project_protocol;
  * Project Module 2 2018-2019: 'Spectrangle'
  * Interface Protocol
  * @author  Vincent van Engers
- * @version 1.0.4
+ * @version 1.0.5
  */
 
-/**
+/** 
  * changelog
+ * 1.0.5
+ * - Corrected example for the replace tile for turnmade
+ * 
  * 1.0.4
  * - Changed from using coordinate to index
  * - Major change to starting the game:
@@ -17,7 +20,6 @@ package project_protocol;
  *   The server will have multiple queues. One for every preference(2,3,4).
  *   The players preference will be used! And there will not be an automic switch to other queues.
  * 
- * changelog
  * 1.0.3
  * - Changes to TURNMADE 
  * 
@@ -315,6 +317,7 @@ public interface Protocol {
 
     /**
      * MOVE
+     * Client --> Server
      * Is used to denote the move of a particular tile to a location
      *
      * List of arguments:
@@ -348,7 +351,7 @@ public interface Protocol {
      * Barry has made put tile (G, R, B, 6) twice rotated at index 3:
      * "TURNMADE,M,Barry,RBG6,PWG5,RBY6,RBG1,GRB6,2,3"
      * 
-     * Barry has replaced his tile (G, R, B, 6) and received tile (Y, Y, Y, 1)
+     * Barry has replaced his tile (Y, Y, Y, 1) and received tile (G, R, B, 6)
      * "TURNMADE,R,Barry,RBG6,PWG5,RBY6,RBG1,RYYY1,"
      * 
      * Barry has skipped his move.
@@ -366,6 +369,7 @@ public interface Protocol {
 
     /**
      * TILEREPLACE
+     * Client --> Server
      * Is used to tell the server that the player wants to replace a tile.
      *
      * List of arguments:
