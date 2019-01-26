@@ -4,11 +4,15 @@ package project_protocol;
  * Project Module 2 2018-2019: 'Spectrangle'
  * Interface Protocol
  * @author  Vincent van Engers
- * @version 1.0.5
+ * @version 1.0.6
  */
 
 /** 
  * changelog
+ * 
+ * 1.0.6
+ * - Corrected example for turn made
+ * 
  * 1.0.5
  * - Corrected example for the replace tile for turnmade
  * 
@@ -298,6 +302,7 @@ public interface Protocol {
 
     /**
      * GAMESTARTED
+     * Server --> client
      * Is used to communicate that the game has started, which players are in the game and what their tiles are.
      *
      * List of arguments
@@ -351,8 +356,8 @@ public interface Protocol {
      * Barry has made put tile (G, R, B, 6) twice rotated at index 3:
      * "TURNMADE,M,Barry,RBG6,PWG5,RBY6,RBG1,GRB6,2,3"
      * 
-     * Barry has replaced his tile (Y, Y, Y, 1) and received tile (G, R, B, 6)
-     * "TURNMADE,R,Barry,RBG6,PWG5,RBY6,RBG1,RYYY1,"
+     * Barry has replaced his tile (Y, Y, Y, 1) and received tile (G, g, R, 5)
+     * "TURNMADE,R,Barry,RBG6,PWG5,GGR5,RBG1,RYYY1"
      * 
      * Barry has skipped his move.
      * "TURNMADE,S,Barry,RBG6,PWG5,RBY6,RBG1"
