@@ -9,6 +9,8 @@ package project_protocol;
 
 /** 
  * changelog
+ * 1.0.7
+ * - At TURNMADE, it is described what to do when the player has less than four tiles.
  * 
  * 1.0.6
  * - Corrected example for turn made
@@ -352,6 +354,7 @@ public interface Protocol {
      * - What tile was replaced (only used with [R])
      * - move (only used with [M])
      * 
+     * 
      * Examples:
      * Barry has made put tile (G, R, B, 6) twice rotated at index 3:
      * "TURNMADE,M,Barry,RBG6,PWG5,RBY6,RBG1,GRB6,2,3"
@@ -361,6 +364,19 @@ public interface Protocol {
      * 
      * Barry has skipped his move.
      * "TURNMADE,S,Barry,RBG6,PWG5,RBY6,RBG1"
+     * 
+     * When a player has less than four tiles, the inventory will be sent in the same way,
+     * with the amount of tiles the player has.
+     * 
+     * Examples:
+     * Barry has made put tile (G, R, B, 6) twice rotated at index 3.
+     * And there are no more tiles left in the bag Barry can grab:
+     * (Note: the last tile in the example is the tile he has put on the board)
+     * "TURNMADE,M,Barry,RBG6,PWG5,RBY6,GRB6,2,3"
+     * 
+     * 
+     * Barry has skipped his move and has still 2 tiles left:
+     * "TURNMADE,S,Barry,RBG6,PWG5"
      * 
      */
     String TURNMADE = "TURNMADE";
